@@ -1,3 +1,6 @@
 [submodule "nft-house"]
 	path = nft-house-smart-contracts
 	url = git@github.com:yehia67/nft-house.git
+[submodule "nft-house-smartContracts"]
+	path = nft-house-smartContracts
+	url = git@github.com:yehia67/nft-house.git
