@@ -14,3 +14,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+section {
+  padding: 3em 1.5rem;
+  display: block;
+}
