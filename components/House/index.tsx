@@ -212,7 +212,6 @@ function House({
               https://infura-ipfs.io
             </Button>
           )}
-          {isLoading && <Spinner m={5} />}
         </Box>
       </Box>
 
