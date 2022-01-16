@@ -209,7 +209,6 @@ function House({
               }}
             >
               <Text mr="8px">&#128239;</Text> Buy for {sellingPrice}{" "}
-              https://infura-ipfs.io
             </Button>
           )}
         </Box>
