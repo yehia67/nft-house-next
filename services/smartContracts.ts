@@ -176,7 +176,13 @@ export const sell = async ({
 };
 export const getHouseByTokenId = async (tokenId: number) => {
   try {
-    const localProvider = new ethers.providers.AlchemyProvider("ropsten");
+    const localProvider = new ethers.providers.JsonRpcProvider(
+      "https://matic-mumbai.chainstacklabs.com",
+      {
+        name: "polygon_testnet",
+        chainId: 80001,
+      }
+    );
 
     const contract = new Contract(
       NftHouse.address,
@@ -203,7 +209,13 @@ export const getHouseByTokenId = async (tokenId: number) => {
 };
 export const getHouses = async () => {
   try {
-    const localProvider = new ethers.providers.AlchemyProvider("ropsten");
+    const localProvider = new ethers.providers.JsonRpcProvider(
+      "https://matic-mumbai.chainstacklabs.com",
+      {
+        name: "polygon_testnet",
+        chainId: 80001,
+      }
+    );
 
     const contract = new Contract(
       NftHouse.address,

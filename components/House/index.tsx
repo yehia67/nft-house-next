@@ -42,8 +42,6 @@ function House({
   imageUrl,
   owner,
   tokenId,
-  tokenUri,
-  numberOfRenters,
   rentPrice,
   sellingPrice,
   availableForRent,
@@ -104,7 +102,6 @@ function House({
       setIsLoading(false);
     }
     setTransactionHash(hash);
-    window.location.reload();
   };
 
   return imageUrl && imageUrl.length > 0 ? (

@@ -7,11 +7,11 @@ export const networkHandler = async (provider: Web3Provider) => {
       return;
     }
     const { chainId } = await provider.getNetwork();
-    if (chainId !== 3) {
+    if (chainId !== 8001) {
       // @ts-ignore
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x3" }], // chainId must be in hexadecimal numbers
+        params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
       });
     }
   } catch (error) {

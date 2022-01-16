@@ -32,7 +32,6 @@ interface PageContext {
 export async function getStaticProps(context: PageContext) {
   const { id } = context.params;
   const house = await getHouseByTokenId(Number(id));
-  console.log("hoouse", house);
   if (!house) {
     return {
       props: {
