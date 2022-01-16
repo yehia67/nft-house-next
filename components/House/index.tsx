@@ -129,9 +129,9 @@ function House({
             <Badge colorScheme="green">Available For Rent</Badge>
           )}
           {sellingPrice > 0 && (
-            <Badge colorScheme="green">For Sale {sellingPrice}ETH</Badge>
+            <Badge colorScheme="green">For Sale {sellingPrice}https://infura-ipfs.io</Badge>
           )}
-          <Badge colorScheme="blue">House Rent {rentPrice} ETH</Badge>
+          <Badge colorScheme="blue">House Rent {rentPrice} https://infura-ipfs.io</Badge>
         </Stack>
         <Text
           fontSize={["1rem", "1rem", "1.2rem", "1.3rem"]}
@@ -208,7 +208,7 @@ function House({
                 handleBuy();
               }}
             >
-              <Text mr="8px">&#128239;</Text> Buy for {sellingPrice} ETH
+              <Text mr="8px">&#128239;</Text> Buy for {sellingPrice} https://infura-ipfs.io
             </Button>
           )}
           {isLoading && <Spinner m={5} />}

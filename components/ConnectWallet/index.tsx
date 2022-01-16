@@ -19,7 +19,7 @@ export default function ConnectButton({ handleOpenModal }: Props) {
     <Box display="flex" alignItems="center" py="2">
       <Box px="3">
         <Text color="white" fontSize="md">
-          {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)} ETH
+          {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)} MATIC
         </Text>
       </Box>
       <Button
