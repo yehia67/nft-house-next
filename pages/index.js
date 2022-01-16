@@ -47,7 +47,7 @@ export default function Home() {
                 name={house.name}
                 imageUrl={house.image}
                 goal={house.rentPrice}
-                raisedAmount={house.rentPrice}
+                raisedAmount={house.numberOfRenters}
               />
             </Link>
           ))
