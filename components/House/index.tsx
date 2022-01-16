@@ -208,7 +208,7 @@ function House({
                 handleBuy();
               }}
             >
-              <Text mr="8px">&#128239;</Text> Buy for {sellingPrice}{" "}
+              <Text mr="8px">&#128239;</Text> Buy for {sellingPrice} MATIC
             </Button>
           )}
         </Box>
