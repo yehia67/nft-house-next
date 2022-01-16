@@ -39,8 +39,8 @@ export default function Nav() {
             <NavLink href="/">
               <span>Home</span>
             </NavLink>
-            <NavLink href="/campaign/create">
-              <span>Create Project</span>
+            <NavLink href="/house/mint">
+              <span>Mint House</span>
             </NavLink>
             <Button onClick={toggleColorMode} margin={3}>
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}

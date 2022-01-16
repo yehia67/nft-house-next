@@ -14,44 +14,57 @@ import * as React from "react";
 import * as Yup from "yup";
 
 import { uploadIPFS } from "@frameworks/ipfs/ipfs";
-import { createCampaign } from "@services/smartContracts";
+import { mintHouse } from "@services/smartContracts";
 
-interface CreateFormI {
-  projectName: string;
+interface MintFormI {
+  houseName: string;
   description: string;
-  ethAmount: number;
+  rentAmount: number;
+  numberOfRenters: number;
 }
 
 const initialValues = {
-  projectName: "",
+  houseName: "",
   description: "",
-  ethAmount: 0,
-  projectImage: "",
+  rentAmount: 0,
+  numberOfRenters: 0,
+  houseImage: "",
 };
 const validationSchema = Yup.object({
-  projectName: Yup.string().required(),
+  houseName: Yup.string().required(),
   description: Yup.string().required(),
-  ethAmount: Yup.number().required().min(0),
-  projectImage: Yup.object().nullable(),
+  rentAmount: Yup.number().required().min(0),
+  numberOfRenters: Yup.number().required().min(1),
+  houseImage: Yup.object().nullable(),
 });
 
-const Create = () => {
+const Mint = () => {
   const [ipfsHash, setIpfsHash] = React.useState("");
   const { account, library, activateBrowserWallet } = useEthers();
 
-  const onSubmit = async (values: CreateFormI) => {
+  const onSubmit = async (values: MintFormI) => {
     if (!account || account.length === 0 || typeof library === "undefined") {
       activateBrowserWallet();
     }
-    await createCampaign(
-      {
-        name: values.projectName,
+    const tokenUri = await uploadIPFS({
+      content: JSON.stringify({
+        name: values.houseName,
         description: values.description,
-        ipfsHash,
-        goal: `${values.ethAmount}`,
-      },
-      { userAddress: `${account}`, provider: library as Web3Provider }
-    );
+        image: ipfsHash,
+        rentAmount: values.rentAmount,
+        numberOfRenters: values.numberOfRenters,
+      }),
+    });
+
+    await mintHouse({
+      tokenUri: String(tokenUri),
+      rentPrice: Number(values.rentAmount),
+      numberOfRenters: Number(values.numberOfRenters),
+      sellingPrice: 0,
+      userAddress: `${account}`,
+      provider: library as Web3Provider,
+    });
+
   };
   return (
     <Formik
@@ -70,11 +83,11 @@ const Create = () => {
           as="form"
           onSubmit={handleSubmit as any}
         >
-          <InputControl name="projectName" label="Your Project Name" />
+          <InputControl name="houseName" label="Your House Address" />
           <>
             <InputControl
-              name="projectImage"
-              label="Your project image will be uploaded to ipfs"
+              name="houseImage"
+              label="Your house image will be uploaded to ipfs"
               inputProps={{
                 type: "file",
                 accept: "image/*",
@@ -95,12 +108,13 @@ const Create = () => {
           </>
           <TextareaControl
             name="description"
-            label="Your project description"
+            label="Your house description"
           />
 
+          <NumberInputControl name="rentAmount" label="Rent price" />
           <NumberInputControl
-            name="ethAmount"
-            label="Amount of ETH that you need (max 120)"
+            name="numberOfRenters"
+            label="Number of renters to your house"
           />
 
           <ButtonGroup mt={5}>
@@ -113,4 +127,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Mint;

@@ -4,15 +4,13 @@ interface CardProps {
   name: string;
   goal: number;
   raisedAmount: number;
-  ipfsHash: string;
-  status: string;
+  imageUrl: string;
 }
 export default function Card({
   name,
   goal,
   raisedAmount,
-  ipfsHash,
-  status,
+  imageUrl,
 }: CardProps) {
   return (
     <Box
@@ -26,7 +24,7 @@ export default function Card({
         p={5}
         width={"100%"}
         height={"10rem"}
-        src={`https://ipfs.io/ipfs/${ipfsHash}`}
+        src={imageUrl}
         alt="Image of funded project"
       />
 
@@ -42,7 +40,7 @@ export default function Card({
         </Box>
 
         <Box display="flex" alignItems="baseline">
-          Goal: {goal}
+          Rent Price: {goal}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             version="1.1"
@@ -89,13 +87,8 @@ export default function Card({
             </g>
           </svg>
         </Box>
-
-        <Box display="flex" mt="2" alignItems="center" height="5rem">
-          {status === "Ended" ? (
-            <Text>Campaign Ended</Text>
-          ) : (
-            <ProgressBar collected={raisedAmount} goal={goal} max={100} />
-          )}
+        <Box display="flex" alignItems="baseline">
+          Number Of Renter: {raisedAmount} Renter
         </Box>
       </Box>
     </Box>

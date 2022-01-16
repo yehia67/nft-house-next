@@ -1,12 +1,11 @@
 import toast from "react-hot-toast";
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import { Contract } from "@ethersproject/contracts";
 
 import type { Web3Provider } from "@ethersproject/providers";
 
 import { networkHandler } from "./networkHandler";
-import CampaignFactory from "@artifacts/CampaignFactory.json";
-import Campaign from "@artifacts/Campaign.json";
+import NftHouse from "@artifacts/NftHouse.json";
 
 export interface MetamaskError {
   message: string;
@@ -14,81 +13,29 @@ export interface MetamaskError {
 }
 export interface Web3I {
   userAddress: string;
-  contractAddress?: string;
   provider: Web3Provider;
 }
 
-export interface CampaignI {
-  name: string;
-  description: string;
-  ipfsHash: string;
-  goal: string;
+export interface HouseI extends Web3I {
+  tokenUri: string;
+  numberOfRenters: number;
+  rentPrice: number;
+  sellingPrice: number;
 }
-export interface CampaignInfoI {
-  contractAddress: string;
-  info: {
-    owner: string;
-    status: string;
-    name: string;
-    description: string;
-    ipfsHash: string;
-    goal: number;
-    amountRaised: number;
-  };
+
+export interface NftPriceI extends Web3I {
+  tokenId: string;
+  amount: number;
 }
-const status = Object.freeze(["Funding", "Ended"]);
-export const getCampaignInfo = async (
-  campaignAddress: string
-): Promise<CampaignInfoI | undefined> => {
-  try {
-    const localProvider = new ethers.providers.AlchemyProvider("ropsten");
-    const contract = new Contract(campaignAddress, Campaign.abi, localProvider);
-    const campaignInfo = await contract.callStatic["campaignInfo"]();
-    return {
-      contractAddress: campaignAddress,
-      info: {
-        owner: campaignInfo.owner,
-        name: campaignInfo.name,
-        description: campaignInfo.description,
-        ipfsHash: campaignInfo.ipfsHash,
-        status: status[campaignInfo.state],
-        goal: Number(ethers.utils.formatEther(campaignInfo.goal.toString())),
-        amountRaised: Number(
-          ethers.utils.formatEther(campaignInfo.amountRaised.toString())
-        ),
-      },
-    };
-  } catch (error) {
-    console.error(error);
-  }
-};
 
-export const getCampaigns = async () => {
-  try {
-    const localProvider = new ethers.providers.AlchemyProvider("ropsten");
-
-    const contract = new Contract(
-      CampaignFactory.address,
-      CampaignFactory.abi,
-      localProvider
-    );
-    const deployedCampaigns = await contract.callStatic[
-      "getDeployedCampaigns"
-    ]();
-    return await Promise.all(
-      deployedCampaigns.map(async (address: string) => {
-        return await getCampaignInfo(address);
-      })
-    );
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const createCampaign = async (
-  { name, description, ipfsHash, goal }: CampaignI,
-  { userAddress, provider }: Web3I
-) => {
+export const mintHouse = async ({
+  tokenUri,
+  numberOfRenters,
+  rentPrice,
+  sellingPrice,
+  provider,
+  userAddress,
+}: HouseI) => {
   try {
     if (!provider || !userAddress) {
       console.log("no provider found");
@@ -96,20 +43,20 @@ export const createCampaign = async (
     }
     await networkHandler(provider);
     const contract = new Contract(
-      CampaignFactory.address,
-      CampaignFactory.abi,
+      NftHouse.address,
+      NftHouse.abi,
       provider.getSigner(userAddress).connectUnchecked()
     );
-    const deployedCampaigns = await contract.createCampaign(
-      name,
-      description,
-      ipfsHash,
-      ethers.utils.parseEther(goal)
+    const mintedHouseTokenId = await contract.mintHouse(
+      tokenUri,
+      numberOfRenters,
+      ethers.utils.parseEther(String(rentPrice)),
+      ethers.utils.parseEther(String(sellingPrice))
     );
     toast.success("Transaction Pending...Check your metamask wallet");
-    await provider.waitForTransaction(deployedCampaigns.hash);
+    await provider.waitForTransaction(mintedHouseTokenId.hash);
     toast.success("Transaction Confirmed...Campaign Created!");
-    return deployedCampaigns;
+    return mintedHouseTokenId;
   } catch (error) {
     if ((error as MetamaskError).message.includes("revert")) {
       toast.error("Transaction Reverted");
@@ -121,12 +68,14 @@ export const createCampaign = async (
   }
 };
 
-export const fund = async (
-  fundAmount: string,
-  { userAddress, provider, contractAddress }: Web3I
-) => {
+export const rent = async ({
+  tokenId,
+  amount,
+  userAddress,
+  provider,
+}: NftPriceI) => {
   try {
-    if (!provider || !userAddress || !contractAddress) {
+    if (!provider || !userAddress) {
       console.log("no provider found");
       return;
     }
@@ -134,16 +83,17 @@ export const fund = async (
     await networkHandler(provider);
 
     const contract = new Contract(
-      contractAddress,
-      Campaign.abi,
+      NftHouse.address,
+      NftHouse.abi,
       provider.getSigner(userAddress).connectUnchecked()
     );
-    const funds = await contract.fund({
-      value: ethers.utils.parseEther(fundAmount),
+    const rent = await contract.payRent(tokenId, {
+      value: ethers.utils.parseEther(String(amount)),
     });
     toast.success("Transaction Pending...Check your metamask wallet");
-    return funds.hash;
+    return rent.hash;
   } catch (error) {
+    console.log("error", error);
     if ((error as MetamaskError).message.includes("revert")) {
       toast.error("transaction reverted");
     }
@@ -154,13 +104,14 @@ export const fund = async (
   }
 };
 
-export const refund = async ({
+export const buy = async ({
+  tokenId,
+  amount,
   userAddress,
   provider,
-  contractAddress,
-}: Web3I) => {
+}: NftPriceI) => {
   try {
-    if (!provider || !userAddress || !contractAddress) {
+    if (!provider || !userAddress) {
       console.log("no provider found");
       return;
     }
@@ -168,13 +119,15 @@ export const refund = async ({
     await networkHandler(provider);
 
     const contract = new Contract(
-      contractAddress,
-      Campaign.abi,
+      NftHouse.address,
+      NftHouse.abi,
       provider.getSigner(userAddress).connectUnchecked()
     );
-    const refund = await contract.refund();
+    const rent = await contract.buy(tokenId, {
+      value: ethers.utils.parseEther(String(amount)),
+    });
     toast.success("Transaction Pending...Check your metamask wallet");
-    return refund.hash;
+    return rent.hash;
   } catch (error) {
     if ((error as MetamaskError).message.includes("revert")) {
       toast.error("transaction reverted");
@@ -186,13 +139,14 @@ export const refund = async ({
   }
 };
 
-export const claimFunds = async ({
+export const sell = async ({
+  tokenId,
+  amount,
   userAddress,
   provider,
-  contractAddress,
-}: Web3I) => {
+}: NftPriceI) => {
   try {
-    if (!provider || !userAddress || !contractAddress) {
+    if (!provider || !userAddress) {
       console.log("no provider found");
       return;
     }
@@ -200,13 +154,16 @@ export const claimFunds = async ({
     await networkHandler(provider);
 
     const contract = new Contract(
-      contractAddress,
-      Campaign.abi,
+      NftHouse.address,
+      NftHouse.abi,
       provider.getSigner(userAddress).connectUnchecked()
     );
-    const funds = await contract.claimFunds();
+    const sell = await contract.sell(
+      tokenId,
+      ethers.utils.parseEther(String(amount))
+    );
     toast.success("Transaction Pending...Check your metamask wallet");
-    return funds.hash;
+    return sell.hash;
   } catch (error) {
     if ((error as MetamaskError).message.includes("revert")) {
       toast.error("transaction reverted");
@@ -217,21 +174,62 @@ export const claimFunds = async ({
     console.error(error);
   }
 };
-
-export const getUserFundsAmount = async ({
-  userAddress,
-  provider,
-  contractAddress,
-}: Web3I) => {
+export const getHouseByTokenId = async (tokenId: number) => {
   try {
-    if (!provider || !userAddress || !contractAddress) {
-      console.log("no provider found");
-      return;
-    }
-    const contract = new Contract(contractAddress, Campaign.abi, provider);
-    const funds = await contract.connect(userAddress).getFunds();
-    return Number(ethers.utils.formatEther(funds.toString()));
+    const localProvider = new ethers.providers.AlchemyProvider("ropsten");
+
+    const contract = new Contract(
+      NftHouse.address,
+      NftHouse.abi,
+      localProvider
+    );
+    const house = await contract.getHouseByTokenId(tokenId);
+    const { name, description, image } = await fetchHouse(house[2]);
+    return {
+      name,
+      description,
+      image,
+      owner: house[0],
+      tokenId: Number(house[1].toNumber()),
+      tokenUri: house[2],
+      numberOfRenters: Number(house[3].toNumber()),
+      numberOfCurrentRenter: Number(house[4].toNumber()),
+      rentPrice: utils.formatEther(house[5].toString()),
+      sellingPrice: utils.formatEther(house[6].toString()),
+    };
   } catch (error) {
     console.error(error);
   }
+};
+export const getHouses = async () => {
+  try {
+    const localProvider = new ethers.providers.AlchemyProvider("ropsten");
+
+    const contract = new Contract(
+      NftHouse.address,
+      NftHouse.abi,
+      localProvider
+    );
+    const numberOfHouses = await contract.getHousesCount();
+    const houses = new Array(numberOfHouses.toNumber()).fill(0);
+
+    const housesInfo = await Promise.all(
+      houses.map(async (house, index) => {
+        return await getHouseByTokenId(index);
+      })
+    );
+    return housesInfo;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchHouse = async (tokenUri: string) => {
+  const houseInfo = await fetch(`https://infura-ipfs.io/ipfs/${tokenUri}`);
+  const houseInfoJson = await houseInfo.json();
+
+  return {
+    name: String(houseInfoJson.name),
+    description: String(houseInfoJson.description),
+    image: `https://infura-ipfs.io/ipfs/${houseInfoJson.image}`,
+  };
 };

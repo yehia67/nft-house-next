@@ -5,29 +5,27 @@ import { Link, Spinner } from "@chakra-ui/react";
 import { useEthers } from "@usedapp/core";
 
 import Card from "@components/Card";
-import { getCampaigns } from "@services/smartContracts";
+import { getHouses } from "@services/smartContracts";
 
 export default function Home() {
   const { library, account } = useEthers();
   const [provider, setProvider] = React.useState();
-  const [campaigns, setCampaigns] = React.useState([]);
+  const [houses, setHouses] = React.useState([]);
 
-
-  const handleGetCampaigns = React.useCallback(async () => {
-    const newCampaigns = await getCampaigns();
-    setCampaigns(newCampaigns);
+  const handleGetHouses = React.useCallback(async () => {
+    const newHouses = await getHouses();
+    setHouses(newHouses);
   }, []);
-
   React.useEffect(() => {
-    handleGetCampaigns();
+    handleGetHouses();
     if (library) {
       setProvider(library);
     }
-  }, [library, handleGetCampaigns]);
+  }, [library, handleGetHouses]);
 
   return (
     <Grid templateColumns="repeat(4, 1fr)" gap={3}>
-      {campaigns.length === 0 ? (
+      {houses.length === 0 ? (
         <Spinner
           display="flex"
           thickness="4px"
@@ -37,20 +35,19 @@ export default function Home() {
           size="xl"
         />
       ) : (
-        campaigns
+        houses
           .slice(0)
           .reverse()
-          .map((campaign) => (
+          .map((house) => (
             <Link
-              key={`campaign/${campaign.contractAddress}`}
-              href={`campaign/${campaign.contractAddress}`}
+              key={`house/${house.tokenId}`}
+              href={`house/${house.tokenId}`}
             >
               <Card
-                name={campaign.info.name}
-                ipfsHash={campaign.info.ipfsHash}
-                goal={campaign.info.goal}
-                raisedAmount={campaign.info.amountRaised}
-                status={campaign.info.status}
+                name={house.name}
+                imageUrl={house.image}
+                goal={house.rentPrice}
+                raisedAmount={house.rentPrice}
               />
             </Link>
           ))
