@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NFT-House
+This is a mock design for NFT House IPFS (upload, fetch), wallet connection with meta-mask, and the principal used transactions (rent, submit to rent, getRented Items). You can check the smart contract[here](https://github.com/yehia67/nft-house)
+NFT House is a platform that supports renting NFT to get some passive income by only holding your NFT. It works on the ERC721 protocol only but soon will help ERC1155. This is just a proof of concept where the user has to transfer the ownership to the contract to rent the NFT. The deployment version will override some transactions on ERC721 and ERC1155 so the renter can use the NFT for some time before returning it to the owner.
 
 ## Getting Started
 
