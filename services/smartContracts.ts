@@ -1,11 +1,11 @@
-import toast from "react-hot-toast";
-import { ethers, utils } from "ethers";
-import { Contract } from "@ethersproject/contracts";
+import toast from 'react-hot-toast';
+import { ethers, utils } from 'ethers';
+import { Contract } from '@ethersproject/contracts';
 
-import type { Web3Provider } from "@ethersproject/providers";
+import type { Web3Provider } from '@ethersproject/providers';
 
-import { networkHandler } from "./networkHandler";
-import NftHouse from "@artifacts/NftHouse.json";
+import NftHouse from '@artifacts/NftHouse.json';
+import { networkHandler } from './networkHandler';
 
 export interface MetamaskError {
   message: string;
@@ -38,31 +38,31 @@ export const mintHouse = async ({
 }: HouseI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
+      console.log('no provider found');
       return;
     }
     await networkHandler(provider);
     const contract = new Contract(
       NftHouse.address,
       NftHouse.abi,
-      provider.getSigner(userAddress).connectUnchecked()
+      provider.getSigner(userAddress).connectUnchecked(),
     );
     const mintedHouseTokenId = await contract.mintHouse(
       tokenUri,
       numberOfRenters,
       ethers.utils.parseEther(String(rentPrice)),
-      ethers.utils.parseEther(String(sellingPrice))
+      ethers.utils.parseEther(String(sellingPrice)),
     );
-    toast.success("Transaction Pending...Check your metamask wallet");
+    toast.success('Transaction Pending...Check your metamask wallet');
     await provider.waitForTransaction(mintedHouseTokenId.hash);
-    toast.success("Transaction Confirmed...Campaign Created!");
+    toast.success('Transaction Confirmed...Campaign Created!');
     return mintedHouseTokenId;
   } catch (error) {
-    if ((error as MetamaskError).message.includes("revert")) {
-      toast.error("Transaction Reverted");
+    if ((error as MetamaskError).message.includes('revert')) {
+      toast.error('Transaction Reverted');
     }
     if ((error as MetamaskError).code === 4001) {
-      toast.error("Transaction Rejected");
+      toast.error('Transaction Rejected');
     }
     console.error(error);
   }
@@ -76,7 +76,7 @@ export const rent = async ({
 }: NftPriceI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
+      console.log('no provider found');
       return;
     }
 
@@ -85,20 +85,20 @@ export const rent = async ({
     const contract = new Contract(
       NftHouse.address,
       NftHouse.abi,
-      provider.getSigner(userAddress).connectUnchecked()
+      provider.getSigner(userAddress).connectUnchecked(),
     );
     const rent = await contract.payRent(tokenId, {
       value: ethers.utils.parseEther(String(amount)),
     });
-    toast.success("Transaction Pending...Check your metamask wallet");
+    toast.success('Transaction Pending...Check your metamask wallet');
     return rent.hash;
   } catch (error) {
-    console.log("error", error);
-    if ((error as MetamaskError).message.includes("revert")) {
-      toast.error("transaction reverted");
+    console.log('error', error);
+    if ((error as MetamaskError).message.includes('revert')) {
+      toast.error('transaction reverted');
     }
     if ((error as MetamaskError).code === 4001) {
-      toast.error("transaction rejected");
+      toast.error('transaction rejected');
     }
     console.error(error);
   }
@@ -112,7 +112,7 @@ export const buy = async ({
 }: NftPriceI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
+      console.log('no provider found');
       return;
     }
 
@@ -121,19 +121,19 @@ export const buy = async ({
     const contract = new Contract(
       NftHouse.address,
       NftHouse.abi,
-      provider.getSigner(userAddress).connectUnchecked()
+      provider.getSigner(userAddress).connectUnchecked(),
     );
     const rent = await contract.buy(tokenId, {
       value: ethers.utils.parseEther(String(amount)),
     });
-    toast.success("Transaction Pending...Check your metamask wallet");
+    toast.success('Transaction Pending...Check your metamask wallet');
     return rent.hash;
   } catch (error) {
-    if ((error as MetamaskError).message.includes("revert")) {
-      toast.error("transaction reverted");
+    if ((error as MetamaskError).message.includes('revert')) {
+      toast.error('transaction reverted');
     }
     if ((error as MetamaskError).code === 4001) {
-      toast.error("transaction rejected");
+      toast.error('transaction rejected');
     }
     console.error(error);
   }
@@ -147,7 +147,7 @@ export const sell = async ({
 }: NftPriceI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
+      console.log('no provider found');
       return;
     }
 
@@ -156,20 +156,20 @@ export const sell = async ({
     const contract = new Contract(
       NftHouse.address,
       NftHouse.abi,
-      provider.getSigner(userAddress).connectUnchecked()
+      provider.getSigner(userAddress).connectUnchecked(),
     );
     const sell = await contract.sell(
       tokenId,
-      ethers.utils.parseEther(String(amount))
+      ethers.utils.parseEther(String(amount)),
     );
-    toast.success("Transaction Pending...Check your metamask wallet");
+    toast.success('Transaction Pending...Check your metamask wallet');
     return sell.hash;
   } catch (error) {
-    if ((error as MetamaskError).message.includes("revert")) {
-      toast.error("transaction reverted");
+    if ((error as MetamaskError).message.includes('revert')) {
+      toast.error('transaction reverted');
     }
     if ((error as MetamaskError).code === 4001) {
-      toast.error("transaction rejected");
+      toast.error('transaction rejected');
     }
     console.error(error);
   }
@@ -177,17 +177,17 @@ export const sell = async ({
 export const getHouseByTokenId = async (tokenId: number) => {
   try {
     const localProvider = new ethers.providers.JsonRpcProvider(
-      "https://matic-mumbai.chainstacklabs.com",
+      'https://matic-mumbai.chainstacklabs.com',
       {
-        name: "polygon_testnet",
+        name: 'polygon_testnet',
         chainId: 80001,
-      }
+      },
     );
 
     const contract = new Contract(
       NftHouse.address,
       NftHouse.abi,
-      localProvider
+      localProvider,
     );
     const house = await contract.getHouseByTokenId(tokenId);
     const { name, description, image } = await fetchHouse(house[2]);
@@ -210,25 +210,23 @@ export const getHouseByTokenId = async (tokenId: number) => {
 export const getHouses = async () => {
   try {
     const localProvider = new ethers.providers.JsonRpcProvider(
-      "https://matic-mumbai.chainstacklabs.com",
+      'https://matic-mumbai.chainstacklabs.com',
       {
-        name: "polygon_testnet",
+        name: 'polygon_testnet',
         chainId: 80001,
-      }
+      },
     );
 
     const contract = new Contract(
       NftHouse.address,
       NftHouse.abi,
-      localProvider
+      localProvider,
     );
     const numberOfHouses = await contract.getHousesCount();
     const houses = new Array(numberOfHouses.toNumber()).fill(0);
 
     const housesInfo = await Promise.all(
-      houses.map(async (house, index) => {
-        return await getHouseByTokenId(index);
-      })
+      houses.map(async (house, index) => await getHouseByTokenId(index)),
     );
     return housesInfo;
   } catch (error) {

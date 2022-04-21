@@ -10,10 +10,10 @@ import {
   ModalBody,
   ModalCloseButton,
   Text,
-} from "@chakra-ui/react";
-import { ExternalLinkIcon, CopyIcon } from "@chakra-ui/icons";
-import { useEthers } from "@usedapp/core";
-import Identicon from "@components/Identicon";
+} from '@chakra-ui/react';
+import { ExternalLinkIcon, CopyIcon } from '@chakra-ui/icons';
+import { useEthers } from '@usedapp/core';
+import Identicon from '@components/Identicon';
 
 type Props = {
   isOpen: boolean;
@@ -45,7 +45,7 @@ export default function AccountModal({ isOpen, onClose }: Props) {
           color="white"
           fontSize="sm"
           _hover={{
-            color: "whiteAlpha.700",
+            color: 'whiteAlpha.700',
           }}
         />
         <ModalBody pt={0} px={4}>
@@ -74,9 +74,9 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 px={2}
                 height="26px"
                 _hover={{
-                  background: "none",
-                  borderColor: "blue.300",
-                  textDecoration: "underline",
+                  background: 'none',
+                  borderColor: 'blue.300',
+                  textDecoration: 'underline',
                 }}
                 onClick={handleDeactivateAccount}
               >
@@ -92,10 +92,10 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 ml="2"
                 lineHeight="1.1"
               >
-                {account &&
-                  `${account.slice(0, 6)}...${account.slice(
+                {account
+                  && `${account.slice(0, 6)}...${account.slice(
                     account.length - 4,
-                    account.length
+                    account.length,
                   )}`}
               </Text>
             </Flex>
@@ -106,8 +106,8 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 fontWeight="normal"
                 fontSize="sm"
                 _hover={{
-                  textDecoration: "none",
-                  color: "whiteAlpha.800",
+                  textDecoration: 'none',
+                  color: 'whiteAlpha.800',
                 }}
                 onClick={() => navigator.clipboard.writeText(account as string)}
               >
@@ -123,8 +123,8 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 color="gray.400"
                 ml={6}
                 _hover={{
-                  color: "whiteAlpha.800",
-                  textDecoration: "underline",
+                  color: 'whiteAlpha.800',
+                  textDecoration: 'underline',
                 }}
               >
                 <ExternalLinkIcon mr={1} />

@@ -28,5 +28,5 @@
     "incremental": true
   },
   "include": ["next-env.d.ts", "**/*.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],
-  "exclude": ["node_modules", "smart-contracts"]
+  "exclude": ["node_modules", "nft-house-smartContracts"]
 }

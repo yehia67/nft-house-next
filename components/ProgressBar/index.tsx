@@ -1,4 +1,4 @@
-import styles from "./styles.module.css";
+import styles from './styles.module.css';
 
 export interface ProgressBarProps {
   collected: number;
@@ -13,7 +13,8 @@ function ProgressBar({ collected, goal, max }: ProgressBarProps) {
       value={(collected * 100) / goal}
       max={max}
     >
-      {(collected * 100) / goal}%
+      {(collected * 100) / goal}
+      %
     </progress>
   );
 }
