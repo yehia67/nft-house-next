@@ -5,7 +5,7 @@ import { Contract } from "@ethersproject/contracts";
 import type { Web3Provider } from "@ethersproject/providers";
 
 import NftHouse from "@artifacts/NftHouse.json";
-import { networkHandler } from "./networkHandler";
+import networkHandler from "./networkHandler";
 
 export interface MetamaskError {
   message: string;
@@ -191,7 +191,7 @@ async function fetchHouse(tokenUri: string) {
   };
 }
 
-const getHouseByTokenId = async (tokenId: number) => {
+export const getHouseByTokenId = async (tokenId: number) => {
   try {
     const localProvider = new ethers.providers.JsonRpcProvider(
       "https://matic-mumbai.chainstacklabs.com",

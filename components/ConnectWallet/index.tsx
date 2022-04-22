@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Button, Box, Text } from "@chakra-ui/react";
 import { useEthers, useEtherBalance } from "@usedapp/core";
 import { formatEther } from "@ethersproject/units";
@@ -51,7 +53,7 @@ export default function ConnectButton({ handleOpenModal }: Props) {
   ) : (
     <Box display="flex" alignItems="center" py="2">
       <Button
-        onClick={handleConnectWallet}
+        onClick={() => handleConnectWallet()}
         fontSize="lg"
         textColor="black"
         fontWeight="medium"

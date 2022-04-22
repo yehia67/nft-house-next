@@ -1,5 +1,6 @@
-import { Image, Box, Text } from "@chakra-ui/react";
-import ProgressBar from "@components/ProgressBar";
+import React from "react";
+
+import { Image, Box } from "@chakra-ui/react";
 
 interface CardProps {
   name: string;

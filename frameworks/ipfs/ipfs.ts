@@ -1,5 +1,4 @@
-import uint8ArrayConcat from "uint8arrays/concat";
-import all from "it-all";
+import toast from "react-hot-toast";
 import ipfs from "./ipfsClient";
 
 export type AwaitIterable<T> = Iterable<T> | AsyncIterable<T>;
@@ -19,7 +18,7 @@ export interface IpfsMedia {
 
 export const uploadIPFS = async (
   ipfsMedia: IpfsMedia
-): Promise<string | undefined> => {
+): Promise<string | null> => {
   try {
     if (!ipfsMedia.content) {
       return "No content found";
@@ -29,6 +28,7 @@ export const uploadIPFS = async (
     });
     return cid.toString(); // To fetch data you need to use the full url ex: `https://ipfs.io/ipfs/${cid.toString()}/${fileName}`
   } catch (error) {
-    console.log(error);
+    toast.error(`Upload to IPFS failed: ${error}`);
+    return null;
   }
 };

@@ -71,7 +71,7 @@ function Mint() {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit, values, errors }) => (
+      {({ handleSubmit }) => (
         <Box
           borderWidth="1px"
           rounded="lg"
@@ -83,28 +83,23 @@ function Mint() {
           onSubmit={handleSubmit as any}
         >
           <InputControl name="houseName" label="Your House Address" />
-          <>
-            <InputControl
-              name="houseImage"
-              label="Your house image will be uploaded to ipfs"
-              inputProps={{
-                type: "file",
-                accept: "image/*",
-                onChangeCapture: (
-                  event: React.ChangeEvent<HTMLInputElement>
-                ) => {
-                  if (event && event.target && event.target.files) {
-                    uploadIPFS({
-                      content: event.target.files[0],
-                    }).then((hash) => {
-                      console.log("hash", hash);
-                      setIpfsHash(hash as string);
-                    });
-                  }
-                },
-              }}
-            />
-          </>
+          <InputControl
+            name="houseImage"
+            label="Your house image will be uploaded to ipfs"
+            inputProps={{
+              type: "file",
+              accept: "image/*",
+              onChangeCapture: (event: React.ChangeEvent<HTMLInputElement>) => {
+                if (event && event.target && event.target.files) {
+                  uploadIPFS({
+                    content: event.target.files[0],
+                  }).then((hash) => {
+                    setIpfsHash(hash as string);
+                  });
+                }
+              },
+            }}
+          />
           <TextareaControl name="description" label="Your house description" />
 
           <NumberInputControl name="rentAmount" label="Rent price" />

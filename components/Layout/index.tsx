@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Toaster } from "react-hot-toast";
 import { ChakraProvider } from "@chakra-ui/react";
 import { DAppProvider } from "@usedapp/core";

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Button,
@@ -78,7 +79,9 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                   borderColor: "blue.300",
                   textDecoration: "underline",
                 }}
-                onClick={handleDeactivateAccount}
+                onClick={() => {
+                  handleDeactivateAccount();
+                }}
               >
                 Disconnect
               </Button>

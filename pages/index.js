@@ -7,8 +7,8 @@ import Card from "@components/Card";
 import { getHouses } from "@services/smartContracts";
 
 export default function Home() {
-  const { library, account } = useEthers();
-  const [provider, setProvider] = React.useState();
+  const { library } = useEthers();
+  const [, setProvider] = React.useState();
   const [houses, setHouses] = React.useState([]);
 
   const handleGetHouses = React.useCallback(async () => {
