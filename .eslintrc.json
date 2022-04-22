@@ -1,18 +1,75 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "jest": true
   },
-  "extends": ["plugin:react/recommended", "airbnb"],
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:prettier/recommended",
+    "plugin:cypress/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
-      "tsx": true
+      "jsx": true
     },
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
-  "rules": {},
-  "ignorePatterns": ["nft-house-smartContracts"]
+  "plugins": ["react", "@typescript-eslint", "jest"],
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "lib",
+    "coverage",
+    "**/*.d.ts",
+    "nft-house-smartContracts"
+  ],
+  "rules": {
+    "react/prop-types": 0,
+    "react/require-default-props": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-no-constructed-context-values": 0,
+    "no-use-before-define": 0,
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "no-restricted-exports": 0,
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never",
+        "tsx": "never",
+        "jsx": "never"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {},
+      "node": {
+        "extensions": [".js", ".jsx", ".json", ".ts", ".tsx"]
+      }
+    }
+  },
+  "overrides": [
+    {
+      "files": ["types.ts"],
+      "rules": {
+        "no-unused-vars": 0
+      }
+    }
+  ],
+  "globals": {
+    "JSX": true
+  }
 }

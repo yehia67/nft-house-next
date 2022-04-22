@@ -1,7 +1,7 @@
-import { Box, ButtonGroup } from '@chakra-ui/react';
-import { Formik } from 'formik';
-import { useEthers } from '@usedapp/core';
-import type { Web3Provider } from '@ethersproject/providers';
+import { Box, ButtonGroup } from "@chakra-ui/react";
+import { Formik } from "formik";
+import { useEthers } from "@usedapp/core";
+import type { Web3Provider } from "@ethersproject/providers";
 
 import {
   InputControl,
@@ -9,12 +9,12 @@ import {
   ResetButton,
   SubmitButton,
   TextareaControl,
-} from 'formik-chakra-ui';
-import * as React from 'react';
-import * as Yup from 'yup';
+} from "formik-chakra-ui";
+import * as React from "react";
+import * as Yup from "yup";
 
-import { uploadIPFS } from '@frameworks/ipfs/ipfs';
-import { mintHouse } from '@services/smartContracts';
+import { uploadIPFS } from "@frameworks/ipfs/ipfs";
+import { mintHouse } from "@services/smartContracts";
 
 interface MintFormI {
   houseName: string;
@@ -24,11 +24,11 @@ interface MintFormI {
 }
 
 const initialValues = {
-  houseName: '',
-  description: '',
+  houseName: "",
+  description: "",
   rentAmount: 0,
   numberOfRenters: 0,
-  houseImage: '',
+  houseImage: "",
 };
 const validationSchema = Yup.object({
   houseName: Yup.string().required(),
@@ -39,11 +39,11 @@ const validationSchema = Yup.object({
 });
 
 function Mint() {
-  const [ipfsHash, setIpfsHash] = React.useState('');
+  const [ipfsHash, setIpfsHash] = React.useState("");
   const { account, library, activateBrowserWallet } = useEthers();
 
   const onSubmit = async (values: MintFormI) => {
-    if (!account || account.length === 0 || typeof library === 'undefined') {
+    if (!account || account.length === 0 || typeof library === "undefined") {
       activateBrowserWallet();
     }
     const tokenUri = await uploadIPFS({
@@ -88,16 +88,16 @@ function Mint() {
               name="houseImage"
               label="Your house image will be uploaded to ipfs"
               inputProps={{
-                type: 'file',
-                accept: 'image/*',
+                type: "file",
+                accept: "image/*",
                 onChangeCapture: (
-                  event: React.ChangeEvent<HTMLInputElement>,
+                  event: React.ChangeEvent<HTMLInputElement>
                 ) => {
                   if (event && event.target && event.target.files) {
                     uploadIPFS({
                       content: event.target.files[0],
                     }).then((hash) => {
-                      console.log('hash', hash);
+                      console.log("hash", hash);
                       setIpfsHash(hash as string);
                     });
                   }
@@ -105,10 +105,7 @@ function Mint() {
               }}
             />
           </>
-          <TextareaControl
-            name="description"
-            label="Your house description"
-          />
+          <TextareaControl name="description" label="Your house description" />
 
           <NumberInputControl name="rentAmount" label="Rent price" />
           <NumberInputControl

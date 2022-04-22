@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Flex,
   Box,
@@ -13,15 +13,15 @@ import {
   Spinner,
   Stack,
   Badge,
-} from '@chakra-ui/react';
-import toast from 'react-hot-toast';
-import Img from 'next/image';
-import { useEthers } from '@usedapp/core';
-import type { Web3Provider } from '@ethersproject/providers';
+} from "@chakra-ui/react";
+import toast from "react-hot-toast";
+import Img from "next/image";
+import { useEthers } from "@usedapp/core";
+import type { Web3Provider } from "@ethersproject/providers";
 
-import ProgressBar from '@components/ProgressBar';
-import { buy, rent, sell } from '@services/smartContracts';
-import styles from './styles.module.css';
+import ProgressBar from "@components/ProgressBar";
+import { buy, rent, sell } from "@services/smartContracts";
+import styles from "./styles.module.css";
 
 export interface HouseProps {
   name: string;
@@ -47,13 +47,13 @@ function House({
   availableForRent,
 }: HouseProps) {
   const { library, account } = useEthers();
-  const [transactionHash, setTransactionHash] = React.useState('');
+  const [transactionHash, setTransactionHash] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [ethAmount, setEthAmount] = React.useState(0);
 
   const handleRent = async () => {
     if (!account || !library) {
-      toast.error('Connect To Metamask Please');
+      toast.error("Connect To Metamask Please");
       return;
     }
     setIsLoading(true);
@@ -70,7 +70,7 @@ function House({
   };
   const handleBuy = async () => {
     if (!account || !library) {
-      toast.error('Connect To Metamask Please');
+      toast.error("Connect To Metamask Please");
       return;
     }
     setIsLoading(true);
@@ -88,7 +88,7 @@ function House({
 
   const handleSetPrice = async () => {
     if (!account || !library) {
-      toast.error('Connect To Metamask Please');
+      toast.error("Connect To Metamask Please");
       return;
     }
     setIsLoading(true);
@@ -106,16 +106,16 @@ function House({
 
   return imageUrl && imageUrl.length > 0 ? (
     <Flex
-      margin={['1.5rem 0', '1.5rem 0', '1.5rem 0', '4.5rem 0']}
-      flexDirection={['column-reverse', 'column-reverse', 'row']}
+      margin={["1.5rem 0", "1.5rem 0", "1.5rem 0", "4.5rem 0"]}
+      flexDirection={["column-reverse", "column-reverse", "row"]}
       justifyContent="space-between"
     >
       <Box maxW="600px">
         <Heading
-          fontSize={['1.6rem', '2rem', '2.3rem', '2.6rem']}
+          fontSize={["1.6rem", "2rem", "2.3rem", "2.6rem"]}
           lineHeight="1.4"
           marginBottom="2rem"
-          marginTop={['0.6rem', '0', '0', '0']}
+          marginTop={["0.6rem", "0", "0", "0"]}
           padding="1rem"
           fontWeight="bold"
         >
@@ -140,7 +140,7 @@ function House({
           </Badge>
         </Stack>
         <Text
-          fontSize={['1rem', '1rem', '1.2rem', '1.3rem']}
+          fontSize={["1rem", "1rem", "1.2rem", "1.3rem"]}
           marginBottom="2.5rem"
           fontWeight="400"
           padding="1rem"
@@ -155,7 +155,9 @@ function House({
             <NumberInput
               defaultValue={ethAmount}
               min={0}
-              onChange={(valueAsString: string, valueAsNumber: number) => setEthAmount(valueAsNumber)}
+              onChange={(valueAsString: string, valueAsNumber: number) =>
+                setEthAmount(valueAsNumber)
+              }
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -166,15 +168,15 @@ function House({
           </Box>
         )}
 
-        <Box m={1} flexDirection={['column', 'column', 'row', 'row']} d="flex">
+        <Box m={1} flexDirection={["column", "column", "row", "row"]} d="flex">
           <Button
             m={1}
             padding="30px 30px"
             fontWeight="600"
-            fontSize={['15px', '16px', '16px', '18px']}
+            fontSize={["15px", "16px", "16px", "18px"]}
             _hover={{
-              backgroundColor: 'orange.500',
-              color: 'white',
+              backgroundColor: "orange.500",
+              color: "white",
             }}
             onClick={() => handleRent()}
           >
@@ -186,18 +188,16 @@ function House({
               m={1}
               padding="30px 30px"
               fontWeight="600"
-              fontSize={['15px', '16px', '16px', '18px']}
+              fontSize={["15px", "16px", "16px", "18px"]}
               _hover={{
-                backgroundColor: 'orange.500',
-                color: 'white',
+                backgroundColor: "orange.500",
+                color: "white",
               }}
               onClick={() => {
                 handleSetPrice();
               }}
             >
-              <Text mr="8px">&#128239;</Text>
-              {' '}
-              Sell
+              <Text mr="8px">&#128239;</Text> Sell
             </Button>
           )}
           {owner !== account && sellingPrice > 0 && (
@@ -205,21 +205,17 @@ function House({
               m={1}
               padding="30px 30px"
               fontWeight="600"
-              fontSize={['15px', '16px', '16px', '18px']}
+              fontSize={["15px", "16px", "16px", "18px"]}
               _hover={{
-                backgroundColor: 'orange.500',
-                color: 'white',
+                backgroundColor: "orange.500",
+                color: "white",
               }}
               onClick={() => {
                 handleBuy();
               }}
             >
-              <Text mr="8px">&#128239;</Text>
-              {' '}
-              Buy for
-              {sellingPrice}
-              {' '}
-              MATIC
+              <Text mr="8px">&#128239;</Text> Buy for
+              {sellingPrice} MATIC
             </Button>
           )}
         </Box>

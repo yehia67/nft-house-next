@@ -1,6 +1,6 @@
-import uint8ArrayConcat from 'uint8arrays/concat';
-import all from 'it-all';
-import ipfs from './ipfsClient';
+import uint8ArrayConcat from "uint8arrays/concat";
+import all from "it-all";
+import ipfs from "./ipfsClient";
 
 export type AwaitIterable<T> = Iterable<T> | AsyncIterable<T>;
 
@@ -18,11 +18,11 @@ export interface IpfsMedia {
 }
 
 export const uploadIPFS = async (
-  ipfsMedia: IpfsMedia,
+  ipfsMedia: IpfsMedia
 ): Promise<string | undefined> => {
   try {
     if (!ipfsMedia.content) {
-      return 'No content found';
+      return "No content found";
     }
     const { cid } = await ipfs.add({
       content: ipfsMedia.content,

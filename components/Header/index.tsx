@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 import {
   Box,
   Flex,
@@ -8,10 +8,10 @@ import {
   useColorModeValue,
   Stack,
   useColorMode,
-} from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
-import AccountModal from '@components/AccountModal';
-import ConnectWallet from '@components/ConnectWallet';
+} from "@chakra-ui/react";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import AccountModal from "@components/AccountModal";
+import ConnectWallet from "@components/ConnectWallet";
 
 function NavLink({ href, children }: { href: string; children: ReactNode }) {
   return (
@@ -20,8 +20,8 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
       py={1}
       rounded="md"
       _hover={{
-        textDecoration: 'none',
-        bg: useColorModeValue('gray.200', 'gray.700'),
+        textDecoration: "none",
+        bg: useColorModeValue("gray.200", "gray.700"),
       }}
       href={href}
     >
@@ -34,7 +34,7 @@ export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box bg={useColorModeValue('gray.700', 'gray.900')} px={4}>
+    <Box bg={useColorModeValue("gray.700", "gray.900")} px={4}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <Box>
           <NavLink href="/">
@@ -44,7 +44,7 @@ export default function Nav() {
             <span>Mint House</span>
           </NavLink>
           <Button onClick={toggleColorMode} margin={3}>
-            {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+            {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
         </Box>
 

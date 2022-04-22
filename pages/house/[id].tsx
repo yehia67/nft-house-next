@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import House from '@components/House';
-import type { HouseProps } from '@components/House';
+import House from "@components/House";
+import type { HouseProps } from "@components/House";
 
-import { getHouseByTokenId } from '@services/smartContracts';
+import { getHouseByTokenId } from "@services/smartContracts";
 
 function HousePage(props: HouseProps) {
   return <House {...props} />;

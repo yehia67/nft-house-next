@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import { Grid, Link, Spinner } from '@chakra-ui/react';
-import { useEthers } from '@usedapp/core';
+import { Grid, Link, Spinner } from "@chakra-ui/react";
+import { useEthers } from "@usedapp/core";
 
-import Card from '@components/Card';
-import { getHouses } from '@services/smartContracts';
+import Card from "@components/Card";
+import { getHouses } from "@services/smartContracts";
 
 export default function Home() {
   const { library, account } = useEthers();
