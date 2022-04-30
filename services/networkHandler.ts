@@ -1,9 +1,12 @@
-import type { Web3Provider } from "@ethersproject/providers";
+import toast from "react-hot-toast";
 
-export const networkHandler = async (provider: Web3Provider) => {
+import type { Web3Provider } from "@ethersproject/providers";
+import type { MetamaskError } from "./smartContracts";
+
+const networkHandler = async (provider: Web3Provider) => {
   try {
     if (!provider) {
-      console.log("provider is null");
+      toast("provider is null");
       return;
     }
     const { chainId } = await provider.getNetwork();
@@ -15,7 +18,15 @@ export const networkHandler = async (provider: Web3Provider) => {
       });
     }
   } catch (error) {
-    console.log(error);
-    return;
+    if ((error as MetamaskError).message.includes("revert")) {
+      toast.error("Transaction Reverted");
+    }
+    if ((error as MetamaskError).code === 4001) {
+      toast.error("Transaction Rejected");
+    }
+    // eslint-disable-next-line no-console
+    console.error(error);
   }
 };
+
+export default networkHandler;

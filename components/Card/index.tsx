@@ -1,5 +1,7 @@
-import { Image, Box, Text } from "@chakra-ui/react";
-import ProgressBar from "@components/ProgressBar";
+import React from "react";
+
+import { Image, Box } from "@chakra-ui/react";
+
 interface CardProps {
   name: string;
   goal: number;
@@ -22,8 +24,8 @@ export default function Card({
     >
       <Image
         p={5}
-        width={"100%"}
-        height={"10rem"}
+        width="100%"
+        height="10rem"
         src={imageUrl}
         alt="Image of funded project"
       />

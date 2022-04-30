@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Button, Box, Text } from "@chakra-ui/react";
 import { useEthers, useEtherBalance } from "@usedapp/core";
 import { formatEther } from "@ethersproject/units";
@@ -19,7 +21,8 @@ export default function ConnectButton({ handleOpenModal }: Props) {
     <Box display="flex" alignItems="center" py="2">
       <Box px="3">
         <Text color="white" fontSize="md">
-          {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)} MATIC
+          {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)}{" "}
+          MATIC
         </Text>
       </Box>
       <Button
@@ -48,9 +51,9 @@ export default function ConnectButton({ handleOpenModal }: Props) {
       </Button>
     </Box>
   ) : (
-    <Box display="flex" alignItems="center"  py="2">
+    <Box display="flex" alignItems="center" py="2">
       <Button
-        onClick={handleConnectWallet}
+        onClick={() => handleConnectWallet()}
         fontSize="lg"
         textColor="black"
         fontWeight="medium"

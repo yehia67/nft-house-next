@@ -4,8 +4,8 @@ import { Contract } from "@ethersproject/contracts";
 
 import type { Web3Provider } from "@ethersproject/providers";
 
-import { networkHandler } from "./networkHandler";
 import NftHouse from "@artifacts/NftHouse.json";
+import networkHandler from "./networkHandler";
 
 export interface MetamaskError {
   message: string;
@@ -38,7 +38,7 @@ export const mintHouse = async ({
 }: HouseI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
+      toast("no provider found");
       return;
     }
     await networkHandler(provider);
@@ -56,7 +56,6 @@ export const mintHouse = async ({
     toast.success("Transaction Pending...Check your metamask wallet");
     await provider.waitForTransaction(mintedHouseTokenId.hash);
     toast.success("Transaction Confirmed...Campaign Created!");
-    return mintedHouseTokenId;
   } catch (error) {
     if ((error as MetamaskError).message.includes("revert")) {
       toast.error("Transaction Reverted");
@@ -64,6 +63,7 @@ export const mintHouse = async ({
     if ((error as MetamaskError).code === 4001) {
       toast.error("Transaction Rejected");
     }
+    // eslint-disable-next-line no-console
     console.error(error);
   }
 };
@@ -73,11 +73,12 @@ export const rent = async ({
   amount,
   userAddress,
   provider,
-}: NftPriceI) => {
+}: // eslint-disable-next-line consistent-return
+NftPriceI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
-      return;
+      toast("No provider found");
+      return "";
     }
 
     await networkHandler(provider);
@@ -87,20 +88,20 @@ export const rent = async ({
       NftHouse.abi,
       provider.getSigner(userAddress).connectUnchecked()
     );
-    const rent = await contract.payRent(tokenId, {
+    const rentTransaction = await contract.payRent(tokenId, {
       value: ethers.utils.parseEther(String(amount)),
     });
     toast.success("Transaction Pending...Check your metamask wallet");
-    return rent.hash;
+    return rentTransaction.hash;
   } catch (error) {
-    console.log("error", error);
-    if ((error as MetamaskError).message.includes("revert")) {
-      toast.error("transaction reverted");
-    }
     if ((error as MetamaskError).code === 4001) {
       toast.error("transaction rejected");
+      return "";
     }
-    console.error(error);
+    if ((error as MetamaskError).message.includes("revert")) {
+      toast.error((error as MetamaskError).message || "transaction reverted");
+    }
+    toast.error("transaction failed");
   }
 };
 
@@ -109,11 +110,12 @@ export const buy = async ({
   amount,
   userAddress,
   provider,
-}: NftPriceI) => {
+}: // eslint-disable-next-line consistent-return
+NftPriceI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
-      return;
+      toast("No provider found");
+      return "";
     }
 
     await networkHandler(provider);
@@ -123,19 +125,20 @@ export const buy = async ({
       NftHouse.abi,
       provider.getSigner(userAddress).connectUnchecked()
     );
-    const rent = await contract.buy(tokenId, {
+    const buyTransaction = await contract.buy(tokenId, {
       value: ethers.utils.parseEther(String(amount)),
     });
     toast.success("Transaction Pending...Check your metamask wallet");
-    return rent.hash;
+    return buyTransaction.hash;
   } catch (error) {
-    if ((error as MetamaskError).message.includes("revert")) {
-      toast.error("transaction reverted");
-    }
     if ((error as MetamaskError).code === 4001) {
       toast.error("transaction rejected");
+      return "";
     }
-    console.error(error);
+    if ((error as MetamaskError).message.includes("revert")) {
+      toast.error((error as MetamaskError).message || "transaction reverted");
+    }
+    toast.error("transaction failed");
   }
 };
 
@@ -144,11 +147,12 @@ export const sell = async ({
   amount,
   userAddress,
   provider,
-}: NftPriceI) => {
+}: // eslint-disable-next-line consistent-return
+NftPriceI) => {
   try {
     if (!provider || !userAddress) {
-      console.log("no provider found");
-      return;
+      toast("No provider found");
+      return "";
     }
 
     await networkHandler(provider);
@@ -158,22 +162,35 @@ export const sell = async ({
       NftHouse.abi,
       provider.getSigner(userAddress).connectUnchecked()
     );
-    const sell = await contract.sell(
+    const sellTransaction = await contract.sell(
       tokenId,
       ethers.utils.parseEther(String(amount))
     );
     toast.success("Transaction Pending...Check your metamask wallet");
-    return sell.hash;
+    return sellTransaction.hash;
   } catch (error) {
-    if ((error as MetamaskError).message.includes("revert")) {
-      toast.error("transaction reverted");
-    }
     if ((error as MetamaskError).code === 4001) {
       toast.error("transaction rejected");
+      return "";
     }
-    console.error(error);
+    if ((error as MetamaskError).message.includes("revert")) {
+      toast.error((error as MetamaskError).message || "transaction reverted");
+    }
+    toast.error("transaction failed");
   }
 };
+
+async function fetchHouse(tokenUri: string) {
+  const houseInfo = await fetch(`https://infura-ipfs.io/ipfs/${tokenUri}`);
+  const houseInfoJson = await houseInfo.json();
+
+  return {
+    name: String(houseInfoJson.name),
+    description: String(houseInfoJson.description),
+    image: `https://infura-ipfs.io/ipfs/${houseInfoJson.image}`,
+  };
+}
+
 export const getHouseByTokenId = async (tokenId: number) => {
   try {
     const localProvider = new ethers.providers.JsonRpcProvider(
@@ -204,7 +221,8 @@ export const getHouseByTokenId = async (tokenId: number) => {
       sellingPrice: utils.formatEther(house[6].toString()),
     };
   } catch (error) {
-    console.error(error);
+    toast.error(`Error on fetching: ${error}`);
+    return null;
   }
 };
 export const getHouses = async () => {
@@ -226,22 +244,11 @@ export const getHouses = async () => {
     const houses = new Array(numberOfHouses.toNumber()).fill(0);
 
     const housesInfo = await Promise.all(
-      houses.map(async (house, index) => {
-        return await getHouseByTokenId(index);
-      })
+      houses.map(async (house, index) => getHouseByTokenId(index))
     );
     return housesInfo;
   } catch (error) {
-    console.error(error);
+    toast.error(`Error on fetching: ${error}`);
+    return null;
   }
-};
-const fetchHouse = async (tokenUri: string) => {
-  const houseInfo = await fetch(`https://infura-ipfs.io/ipfs/${tokenUri}`);
-  const houseInfoJson = await houseInfo.json();
-
-  return {
-    name: String(houseInfoJson.name),
-    description: String(houseInfoJson.description),
-    image: `https://infura-ipfs.io/ipfs/${houseInfoJson.image}`,
-  };
 };

@@ -19,9 +19,8 @@ import Img from "next/image";
 import { useEthers } from "@usedapp/core";
 import type { Web3Provider } from "@ethersproject/providers";
 
-import ProgressBar from "@components/ProgressBar";
-import styles from "./styles.module.css";
 import { buy, rent, sell } from "@services/smartContracts";
+import styles from "./styles.module.css";
 
 export interface HouseProps {
   name: string;
@@ -29,8 +28,6 @@ export interface HouseProps {
   imageUrl: string;
   owner: string;
   tokenId: string;
-  tokenUri: string;
-  numberOfRenters: number;
   rentPrice: number;
   sellingPrice: number;
   availableForRent: boolean;
@@ -47,8 +44,8 @@ function House({
   availableForRent,
 }: HouseProps) {
   const { library, account } = useEthers();
-  const [transactionHash, setTransactionHash] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [, setTransactionHash] = React.useState("");
+  const [, setIsLoading] = React.useState(false);
   const [ethAmount, setEthAmount] = React.useState(0);
 
   const handleRent = async () => {
@@ -129,9 +126,15 @@ function House({
             <Badge colorScheme="green">Available For Rent</Badge>
           )}
           {sellingPrice > 0 && (
-            <Badge colorScheme="green">For Sale {sellingPrice}</Badge>
+            <Badge colorScheme="green">
+              For Sale
+              {sellingPrice}
+            </Badge>
           )}
-          <Badge colorScheme="blue">House Rent {rentPrice}</Badge>
+          <Badge colorScheme="blue">
+            House Rent
+            {rentPrice}
+          </Badge>
         </Stack>
         <Text
           fontSize={["1rem", "1rem", "1.2rem", "1.3rem"]}
@@ -208,7 +211,8 @@ function House({
                 handleBuy();
               }}
             >
-              <Text mr="8px">&#128239;</Text> Buy for {sellingPrice} MATIC
+              <Text mr="8px">&#128239;</Text> Buy for
+              {` ${sellingPrice}`} MATIC
             </Button>
           )}
         </Box>

@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
+import React from "react";
 import { useEthers } from "@usedapp/core";
-//@ts-expect-error
+// @ts-expect-error
 import Jazzicon from "@metamask/jazzicon";
 import styled from "@emotion/styled";
 
@@ -12,10 +12,10 @@ const StyledIdenticon = styled.div`
 `;
 
 export default function Identicon() {
-  const ref = useRef<HTMLDivElement>();
+  const ref = React.useRef<HTMLDivElement>();
   const { account } = useEthers();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (account && ref.current) {
       ref.current.innerHTML = "";
       ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)));

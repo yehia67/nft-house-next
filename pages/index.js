@@ -1,15 +1,14 @@
 import React from "react";
 
-import { Grid } from "@chakra-ui/react";
-import { Link, Spinner } from "@chakra-ui/react";
+import { Grid, Link, Spinner } from "@chakra-ui/react";
 import { useEthers } from "@usedapp/core";
 
 import Card from "@components/Card";
 import { getHouses } from "@services/smartContracts";
 
 export default function Home() {
-  const { library, account } = useEthers();
-  const [provider, setProvider] = React.useState();
+  const { library } = useEthers();
+  const [, setProvider] = React.useState();
   const [houses, setHouses] = React.useState([]);
 
   const handleGetHouses = React.useCallback(async () => {

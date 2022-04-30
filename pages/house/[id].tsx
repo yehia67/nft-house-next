@@ -5,9 +5,9 @@ import type { HouseProps } from "@components/House";
 
 import { getHouseByTokenId } from "@services/smartContracts";
 
-const HousePage = (props: HouseProps) => {
+function HousePage(props: HouseProps) {
   return <House {...props} />;
-};
+}
 
 export default HousePage;
 
